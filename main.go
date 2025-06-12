@@ -2,7 +2,32 @@ package main
 
 import "fmt"
 
+func contains(a []string, x string) bool {
+	for _, v := range a {
+		if v == x {
+			fmt.Println("Тардет найден: ", x)
+		}
+	}
+	return true
+}
+
+func getMax(a ...int) (max int) {
+	for _, v := range a {
+		if v > max {
+			max = v
+		}
+	}
+	return
+}
+
 func main() {
+	a := []int{10, 10, -11, 0, 100, -26}
+	fmt.Println("Максимальное значение: ", getMax(a...))
+
+	someString := "a"
+	arr := []string{"a", "b", "c"}
+	contains(arr, someString)
+
 	accountingBooks := map[string]map[string][]string{
 		"Anton M.": {
 			"books":     {"Metro 2033", "Chack Palanick", "Computer Science"},
@@ -30,8 +55,8 @@ func main() {
 			count++
 		}
 	}
-	
-	fmt.Printf("Кол-во читателей с изданиями на руках: %d\n ", count)
+
+	fmt.Printf("Кол-во читателей с изданиями на руках: %d\n", count)
 
 	for reader, categories := range accountingBooks {
 		total := 0
