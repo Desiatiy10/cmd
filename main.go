@@ -1,69 +1,39 @@
 package main
 
-import "fmt"
-
-func contains(a []string, x string) bool {
-	for _, v := range a {
-		if v == x {
-			fmt.Println("Тардет найден: ", x)
-		}
-	}
-	return true
-}
-
-func getMax(a ...int) (max int) {
-	for _, v := range a {
-		if v > max {
-			max = v
-		}
-	}
-	return
-}
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
-	a := []int{10, 10, -11, 0, 100, -26}
-	fmt.Println("Максимальное значение: ", getMax(a...))
-
-	someString := "a"
-	arr := []string{"a", "b", "c"}
-	contains(arr, someString)
-
-	accountingBooks := map[string]map[string][]string{
-		"Anton M.": {
-			"books":     {"Metro 2033", "Chack Palanick", "Computer Science"},
-			"newspaper": {},
-		},
-		"Sergey L.": {
-			"books":     {},
-			"newspaper": {"WP", "RT", "some trash"},
-		},
-		"Mikhalil K.": {},
+	inputFile, err := os.Open("in.txt")
+	if err != nil {
+		fmt.Println("Ошибка открытия in.txt - ", err)
+		return
 	}
+	defer inputFile.Close()
 
-	count := 0
-
-	for _, categories := range accountingBooks {
-		hasBookOrPaper := false
-
-		for categori, items := range categories {
-			if categori != "" || len(items) > 0 {
-				hasBookOrPaper = true
-				break
-			}
-		}
-		if hasBookOrPaper {
-			count++
-		}
+	outputFile, err := os.Create("out.txt")
+	if err != nil {
+		fmt.Println("Ошибка создания out.txt - ", err)
+		return
 	}
+	defer outputFile.Close()
 
-	fmt.Printf("Кол-во читателей с изданиями на руках: %d\n", count)
+	scaner := bufio.NewScanner(inputFile)
+	lineNumber := 1
 
-	for reader, categories := range accountingBooks {
-		total := 0
+	for scaner.Scan() {
+		line := scaner.Text()
 
-		for _, items := range categories {
-			total += len(items)
+		numberedLine := fmt.Sprintf("%d. %s\n", lineNumber, line)
+
+		_, err = outputFile.WriteString(numberedLine)
+		if err != nil {
+			fmt.Println("Ошбика записи - ", err)
+			return
 		}
-		fmt.Printf("Читатель: %s Колличество изданий на руках: %d\n", reader, total)
+		lineNumber++
 	}
 }
